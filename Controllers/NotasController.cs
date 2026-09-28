@@ -22,7 +22,7 @@ namespace ESCOLAT2.Controllers
         // GET: Notas
         public async Task<IActionResult> Index()
         {
-            var contexto = _context.Notas.Include(n => n.Aluno).Include(n => n.Disciplina);
+            var contexto = _context.Notas.Include(n => n.Aluno).Include(n => n.Disciplina).ThenInclude(c=>c.Curso);
             return View(await contexto.ToListAsync());
         }
 
