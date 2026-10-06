@@ -1,0 +1,71 @@
+@model IEnumerable<ESCOLAT2.Models.ViewModel.AgruparCursoDisp>
+
+@{
+    ViewData["Title"] = "AgruparNotaPorCursoDisp";
+}
+
+<h1>AgruparNotaPorCursoDisp</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.curso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.disciplina)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.somaNota)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.contarNota)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mediaNota)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.maiorNota)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.menorNota)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.curso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.disciplina)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.somaNota)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.contarNota)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mediaNota)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.maiorNota)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.menorNota)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

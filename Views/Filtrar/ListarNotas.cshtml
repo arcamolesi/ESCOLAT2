@@ -1,0 +1,94 @@
+@model IEnumerable<ESCOLAT2.Models.Nota>
+
+@{
+    ViewData["Title"] = "Listar Notas";
+}
+
+<h1>Listar Notas</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Disciplina.Curso)
+            </th>
+           <th>
+                @Html.DisplayNameFor(model => model.Disciplina)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Aluno)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Semestre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Valor)
+            </th>
+            <th>Qtde</th>
+            <th>Salario</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+
+@{
+   float totVal = 0;
+   int cont=0; 
+   Random rand = new Random();
+}
+
+@foreach (var item in Model) {  
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Disciplina.Curso.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Disciplina.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Aluno.Nome)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Semestre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Valor)
+            </td>       
+
+            @{
+                int qtde = rand.Next(1, 30 );
+                float total = qtde * item.Aluno.ValorHora;
+            }
+
+            <td>@qtde</td>
+            <td>@item.Aluno.ValorHora.ToString("N2")</td>
+            <td>@total.ToString("N2")</td>
+
+
+            @{
+                totVal += item.Valor;
+                cont++; 
+            }
+
+        </tr>
+}
+    </tbody>
+</table>
+
+
+@{float med = totVal / cont;}
+
+<h5>Quantidade de Notas: @cont</h5>
+<h5>Soma de Valores: @totVal.ToString("N2")</h5>
+<h5>Média: @med.ToString("N2")</h5>
+
+
+<h5>Quantidade de Notas: @Model.Count()</h5>
+<h5>Soma de Valores: @Model.Sum(m => m.Valor).ToString("N2")</h5>
+<h5>Média: @Model.Average(m => m.Valor).ToString("N2")</h5> 
+<h5>Nota Mais Alta: @Model.Max(m => m.Valor).ToString("N2") </h5>
+<h5>Menor Nota: @Model.Min(m => m.Valor).ToString("N2") </h5>
+
