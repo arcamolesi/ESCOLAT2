@@ -66,5 +66,83 @@ namespace ESCOLAT2.Controllers
             return View(lista);
         }
 
+        public async Task<IActionResult> Pivot()
+        {
+            var alunos = await contexto.Alunos
+                .Include(a => a.Curso)
+                .Include(a => a.Notas)
+                    .ThenInclude(n => n.Disciplina)
+                .AsNoTracking()
+                .ToListAsync();
+
+            var todasDisciplinas = await contexto.Disciplinas
+                .OrderBy(d => d.Id)
+                .AsNoTracking()
+                .ToListAsync();
+
+            // Montar o Pivot
+            var linhas = alunos.Select(aluno =>
+            {
+                // Agrupa as notas por Disciplina
+                var notasPorDisciplina = aluno.Notas
+                    .GroupBy(n => n.DisciplinaId)
+                    .ToDictionary(
+                        g => g.Key,
+                        g =>
+                        {
+                            // Pega a nota do semestre 1
+                            var notaSem1 = g.FirstOrDefault(n => n.Semestre == 1)?.Valor;
+
+                            // Pega a nota do semestre 2
+                            var notaSem2 = g.FirstOrDefault(n => n.Semestre == 2)?.Valor;
+
+                            // Se não tiver nenhuma nota, retorna "NA"
+                            if (notaSem1 == null && notaSem2 == null)
+                                return "NA";
+
+                            // Calcula a média (considerando 0 quando não tiver o semestre)
+                            double n1 = notaSem1 ?? 0;
+                            double n2 = notaSem2 ?? 0;
+
+                            double media = (n1 + n2) / 2;
+
+                            return media.ToString("0.00");
+                        });
+
+                // Monta o dicionário completo com todas as disciplinas
+                var notasCompletas = todasDisciplinas.ToDictionary(
+                    d => d.Id,
+                    d => notasPorDisciplina.ContainsKey(d.Id)
+                        ? notasPorDisciplina[d.Id]
+                        : "NA"
+                ); 
+                    
+                
+
+                return new PivotRowViewModel
+                {
+                    AlunoNome = aluno.Nome,
+                    CursoNome = aluno.Curso.Descricao,
+                    NotasPorDisciplina = notasCompletas
+                };
+            })
+            .OrderBy(l => l.CursoNome)
+            .ThenBy(l => l.AlunoNome)
+            .ToList();
+
+            var viewModel = new PivotNotasViewModel
+            {
+                Disciplinas = todasDisciplinas,
+                Linhas = linhas
+            };
+
+            return View(viewModel);
+        }
+
+
+
+
+
+
     }
 }

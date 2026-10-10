@@ -1,0 +1,57 @@
+@model ESCOLAT2.Models.ViewModel.PivotNotasViewModel
+
+@{
+    ViewData["Title"] = "Pivot";
+}
+
+<h1>Pivot</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Aluno</th>
+            <th>Curso</th>
+@*             @foreach (var disciplina in Model.Disciplinas)
+            {
+                <th>@disciplina.Descricao</th>
+            } *@
+        </tr>
+    </thead>
+    
+
+    <tbody>
+
+ @foreach (var item in Model.Linhas)
+            {
+                <tr>
+                    <td> @item.AlunoNome</td>
+                    <td> @item.CursoNome</td>
+
+
+                    <td class="text-center">
+                        <text>  |  </text>
+                        @foreach (var disciplina in Model.Disciplinas)
+                        {
+                            // Busca a nota usando o Id da disciplina como chave
+                            var nota = item.NotasPorDisciplina.ContainsKey(disciplina.Id) 
+                                    ? item.NotasPorDisciplina[disciplina.Id] 
+                                    : "NA";
+
+                                @if (nota != "NA")
+                                {
+                                    @nota
+                                    <text>  |  </text>
+                                }
+
+
+                        }
+                    </td>
+
+                </tr>
+            }
+
+    </tbody>
+</table>
